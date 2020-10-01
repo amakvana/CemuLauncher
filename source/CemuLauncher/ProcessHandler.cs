@@ -6,7 +6,7 @@ namespace CemuLauncher
 {
 
     /// <summary>
-    /// https://stackoverflow.com/a/13109774
+    /// https://stackoverflow.com/a/71457
     /// Modified to accept pName rather than pID
     /// </summary>
     /// 
