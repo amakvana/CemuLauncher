@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29230.47
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CemuLauncher", "CemuLauncher\CemuLauncher.csproj", "{8CD4038E-7ACC-4B8D-B19D-A45FEFEA7ADA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8CD4038E-7ACC-4B8D-B19D-A45FEFEA7ADA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CD4038E-7ACC-4B8D-B19D-A45FEFEA7ADA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CD4038E-7ACC-4B8D-B19D-A45FEFEA7ADA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CD4038E-7ACC-4B8D-B19D-A45FEFEA7ADA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BA13C20D-A35E-4A3E-A9C7-3923F2C66685}
+	EndGlobalSection
+EndGlobal
