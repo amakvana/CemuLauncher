@@ -1,5 +1,5 @@
 # CemuLauncher
-A custom Launcher for Cemu. 
+A custom Game Launcher for Cemu. 
 
 Designed for those who require advanced features such as Per-Game Graphics API settings and Pause/Resume/Stop functionality for Cemu. 
 
