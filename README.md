@@ -13,6 +13,7 @@ Designed for those who require advanced features such as Per-Game Graphics API s
 
 ### Usage 
 See [GUIDE.md](https://github.com/amakvana/CemuLauncher/blob/master/GUIDE.md)
+
 https://github.com/amakvana/CemuLauncher/blob/master/GUIDE.md
 
 ## Downloads
