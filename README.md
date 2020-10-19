@@ -12,13 +12,8 @@ Designed for those who require advanced features such as Per-Game Graphics API s
 * Switches API before game execution 
 
 ### Usage 
-1. Ensure Cemu is up-to-date and fully configured (mlc01 & gamepaths set)
-2. Place CemuLauncher.exe alongside Cemu.exe in the root of your Cemu folder
-3. Run CemuLauncher
-4. ```Right-click``` on each game and click on ```Edit Graphics API``` to set per-game API's 
-5. Double-click on a game to run cemu with chosen Per-Game Graphics API
-
-* Per-Game Graphics API settings are stored in CemuLauncherSettings.xml
+See [GUIDE.md](https://github.com/amakvana/CemuLauncher/blob/master/GUIDE.md)
+https://github.com/amakvana/CemuLauncher/blob/master/GUIDE.md
 
 ## Downloads
 https://github.com/amakvana/CemuLauncher/releases/latest
