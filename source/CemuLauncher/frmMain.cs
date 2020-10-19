@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
@@ -21,69 +22,92 @@ namespace CemuLauncher
         {
             InitializeComponent();
         }
-
+        
         private void FrmMain_Load(object sender, EventArgs e)
         {
             // check for updates
             // if latest version, continue loading
             // if not, prompt user to download & exit
-            try
-            {
-                string onlineVersion = "";
-                using (var client = new WebClient())
-                using (Stream stream = client.OpenRead("https://raw.githubusercontent.com/amakvana/CemuLauncher/master/version"))
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    onlineVersion = reader.ReadToEnd();
-                }
-                if (Application.ProductVersion != onlineVersion)
-                {
-                    MessageBox.Show("New version of CemuLauncher available, please download from https://github.com/amakvana/CemuLauncher", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Process.Start("https://github.com/amakvana/CemuLauncher");
-                    Application.Exit();
-                }
-            }
-            catch
+
+            if (!CemuLauncherIsUpdated())
             {
                 MessageBox.Show("New version of CemuLauncher available, please download from https://github.com/amakvana/CemuLauncher", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Process.Start("https://github.com/amakvana/CemuLauncher");
                 Application.Exit();
             }
 
-            // check if Cemu settings have been created.
-            // If not, tell user to configure cemu then close this app 
-            if (!File.Exists(CemuSettingsPath))
+            // check if command-line args have been passed through 
+            string[] cmdLineArgs = Environment.GetCommandLineArgs();
+            if (cmdLineArgs != null && cmdLineArgs.Length > 1)
             {
-                MessageBox.Show("Cemu settings.xml file not found, please configure Cemu before running the Cemu Launcher", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
-            } 
-            else
-            {
-                // read in settings.xml & parse it
-                XmlDocument doc = new XmlDocument();
-                doc.Load(CemuSettingsPath);
-                int cemuUserSetApi = int.Parse(doc.DocumentElement.SelectSingleNode(CemuSettingsNodes.DefaultApi).InnerText);
-                var gameEntryNodes = doc.DocumentElement.SelectNodes(CemuSettingsNodes.DefaultGameEntries);
-                foreach (XmlNode node in gameEntryNodes)
-                {
-                    Game g = new Game
-                    {
-                        Name = node["name"].InnerText,
-                        TitleId = long.Parse(node["title_id"].InnerText),
-                        GameVersion = int.Parse(node["version"].InnerText),
-                        DlcVersion = int.Parse(node["dlc_version"].InnerText),
-                        Path = node["path"].InnerText
-                    };
-
-                    games.Add(g);
-                    lstGames.Items.Add($"{g.Name}\nVersion: {g.GameVersion}, DLC: {g.DlcVersion}");
-                }
-
-                // check if cemulaunchersettings.xml exists
-                // if not then create it & populate it with the title_id's & default api set inside cemu 
+                // check if cemulaunchersettings.xml exists 
                 if (!File.Exists(Properties.Resources.CemuLauncherSettingsFile))
                 {
-                    using (var sw = new StreamWriter(Properties.Resources.CemuLauncherSettingsFile, true))
+                    MessageBox.Show("CemuLauncherSettings.xml file not found, please configure CemuLauncher before running from the command line", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
+
+                // build args collection 
+                string cemuArgs = Environment.CommandLine.Replace(Environment.GetCommandLineArgs()[0], "").Trim();
+                string cemuArgsGamePath = cemuArgs.Replace("-g", "").Replace("\"", "").Trim();
+
+                // read in settings.xml, parse it & get title_id for selected game path
+                XmlDocument doc = new XmlDocument();
+                doc.Load(CemuSettingsPath);
+                var gameEntryNodes = doc.DocumentElement.SelectNodes(CemuSettingsNodes.DefaultGameEntries);
+                long selectedGameTitleId = -1;
+                string selectedGamePath = "";   // using this allows game searches without full path 
+                foreach (XmlNode node in gameEntryNodes)
+                {
+                    if (node["path"].InnerText.Contains(cemuArgsGamePath))
+                    {
+                        selectedGameTitleId = long.Parse(node["title_id"].InnerText);
+                        selectedGamePath = $"-g \"{node["path"].InnerText}\"";
+                    }
+                }
+
+                // run the game 
+                RunGame(selectedGameTitleId, selectedGamePath);
+
+                // exit this app but keep cemu open 
+                CloseForm(false);
+            }
+            else
+            {
+                // no args, open like usual 
+
+                // check if Cemu settings have been created.
+                // If not, tell user to configure cemu then close this app 
+                if (!File.Exists(CemuSettingsPath))
+                {
+                    MessageBox.Show("Cemu settings.xml file not found, please configure Cemu before running the Cemu Launcher", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
+                else
+                {
+                    // read in settings.xml & parse it
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(CemuSettingsPath);
+                    int cemuUserSetApi = int.Parse(doc.DocumentElement.SelectSingleNode(CemuSettingsNodes.DefaultApi).InnerText);
+                    var gameEntryNodes = doc.DocumentElement.SelectNodes(CemuSettingsNodes.DefaultGameEntries);
+                    foreach (XmlNode node in gameEntryNodes)
+                    {
+                        Game g = new Game
+                        {
+                            Name = node["name"].InnerText,
+                            TitleId = long.Parse(node["title_id"].InnerText),
+                            GameVersion = int.Parse(node["version"].InnerText),
+                            DlcVersion = int.Parse(node["dlc_version"].InnerText),
+                            Path = node["path"].InnerText
+                        };
+
+                        games.Add(g);
+                        lstGames.Items.Add($"{g.Name}\nVersion: {g.GameVersion}, DLC: {g.DlcVersion}");
+                    }
+
+                    // check if cemulaunchersettings.xml exists
+                    // if not then create it & populate it with the title_id's & default api set inside cemu 
+                    if (!File.Exists(Properties.Resources.CemuLauncherSettingsFile))
                     {
                         var sb = new StringBuilder();
                         sb.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
@@ -96,23 +120,34 @@ namespace CemuLauncher
                             sb.AppendLine("</entry>");
                         }
                         sb.Append("</game>");
-                        sw.Write(sb.ToString());
+                        using (var sw = new StreamWriter(Properties.Resources.CemuLauncherSettingsFile, true))
+                        {
+                            sw.Write(sb.ToString());
+                        }
                     }
-                }
 
-                // setup UI defaults 
-                fullscreenToolStripMenuItem.Enabled = true;
-                fullscreenToolStripMenuItem.Checked = bool.Parse(doc.DocumentElement.SelectSingleNode(CemuSettingsNodes.DefaultFullScreen).InnerText);
-                playToolStripMenuItem.Enabled = true;
-                pauseToolStripMenuItem.Enabled = false;
-                stopToolStripMenuItem.Enabled = false;
-                lstGames.Enabled = true;
+                    // setup UI defaults 
+                    fullscreenToolStripMenuItem.Enabled = true;
+                    fullscreenToolStripMenuItem.Checked = bool.Parse(doc.DocumentElement.SelectSingleNode(CemuSettingsNodes.DefaultFullScreen).InnerText);
+                    playToolStripMenuItem.Enabled = true;
+                    pauseToolStripMenuItem.Enabled = false;
+                    stopToolStripMenuItem.Enabled = false;
+                    lstGames.Enabled = true;
+                }
             }
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            KillCemu();
+            string[] cmdLineArgs = Environment.GetCommandLineArgs();
+            if (cmdLineArgs != null && cmdLineArgs.Length > 1)
+            {
+                CloseForm(false);
+            }
+            else
+            {
+                CloseForm(true);
+            }
         }
 
         private void EditGameAPIToolStripMenuItem_Click(object sender, EventArgs e)
@@ -231,6 +266,14 @@ namespace CemuLauncher
         {
             Process.Start("https://github.com/amakvana/CemuLauncher");
         }
+        private void FullscreenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // alter fullscreen value depending if option is checked 
+            XmlDocument doc = new XmlDocument();
+            doc.Load(CemuSettingsPath);
+            doc.DocumentElement.SelectSingleNode(CemuSettingsNodes.DefaultFullScreen).InnerText = fullscreenToolStripMenuItem.Checked ? "true" : "false";
+            doc.Save(CemuSettingsPath);
+        }
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
@@ -246,6 +289,12 @@ namespace CemuLauncher
             }
         }
 
+        private void CloseForm(bool killCemu = false)
+        {
+            if (killCemu) KillCemu();
+            Application.Exit();
+        }
+
         private void KillCemu()
         {
             // end cemu tasks if running 
@@ -254,7 +303,10 @@ namespace CemuLauncher
             {
                 foreach (Process p in processes)
                 {
-                    p.Kill();
+                    if (!p.HasExited)
+                    {
+                        p.Kill();
+                    }
                 }
             }
         }
@@ -299,13 +351,54 @@ namespace CemuLauncher
             lstGames.Enabled = false;
         }
 
-        private void FullscreenToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RunGame(long titleId, string cemuArgs)
         {
-            // alter fullscreen value depending if option is checked 
+            int currentGameApi = -1;    // -1 = unset
+           
+            // read in the game api value set for currently selected game
             XmlDocument doc = new XmlDocument();
+            doc.Load(Properties.Resources.CemuLauncherSettingsFile);
+            var nodes = doc.DocumentElement.SelectNodes("//*[local-name()='game']/*[local-name()='entry']");
+            foreach (XmlNode node in nodes)
+            {
+                // load in the value of the current game title id
+                if (long.Parse(node["title_id"].InnerText) == titleId)
+                {
+                    currentGameApi = int.Parse(node["api"].InnerText);
+                }
+            }
+
+            // amend settings.xml with api value 
             doc.Load(CemuSettingsPath);
-            doc.DocumentElement.SelectSingleNode(CemuSettingsNodes.DefaultFullScreen).InnerText = fullscreenToolStripMenuItem.Checked ? "true" : "false";
+            doc.DocumentElement.SelectSingleNode(CemuSettingsNodes.DefaultApi).InnerText = currentGameApi.ToString();
             doc.Save(CemuSettingsPath);
+
+            // execute cemu with correct params 
+            using (var p = new Process())
+            {
+                p.StartInfo.FileName = CemuExePath;
+                p.StartInfo.Arguments = $"{cemuArgs}";
+                p.Start();
+            }
+        }
+
+        private bool CemuLauncherIsUpdated()
+        {
+            try
+            {
+                string onlineVersion = "";
+                using (var client = new WebClient())
+                using (Stream stream = client.OpenRead("https://raw.githubusercontent.com/amakvana/CemuLauncher/master/version"))
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    onlineVersion = reader.ReadToEnd();
+                }
+                return (Application.ProductVersion == onlineVersion);
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

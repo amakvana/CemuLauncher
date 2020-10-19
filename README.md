@@ -35,15 +35,6 @@ CemuLauncher.exe must be placed alongside Cemu.exe.
 
 CemuLauncher does not require Administrator privileges to run.
 
-## Hashes 
-Hashes of latest CemuLauncher.exe below: 
-Hash | Value
---- | ---
-MD5 | a1f8c0495512071f2ec10d0837347e34
-SHA1 | 4ac90ba08b65db49c8e652ee12205316416c0b26
-SHA256 | e4d153bb7855b0d5c86b084c6ce3bc0fb99712873d8d6dc1d0b970422daa518d
-SHA512 | 487c156b3fe585301c2776aeff870cc05fbe30c8cf9f3312942093202d1c407caf7a230d5debcb22c1fd5fd03ebe3dc95e061e0f6700af31d34f72de1aa02e5c
-
 ## Acknowledgements
 Thanks:
 * [Cemu Team](https://cemu.info/) - Nintendo Wii U Emulator Developers 

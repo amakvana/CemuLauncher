@@ -93,21 +93,21 @@
             // playToolStripMenuItem
             // 
             this.playToolStripMenuItem.Name = "playToolStripMenuItem";
-            this.playToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.playToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.playToolStripMenuItem.Text = "Play";
             this.playToolStripMenuItem.Click += new System.EventHandler(this.PlayToolStripMenuItem_Click);
             // 
             // pauseToolStripMenuItem
             // 
             this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
-            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.pauseToolStripMenuItem.Text = "Pause";
             this.pauseToolStripMenuItem.Click += new System.EventHandler(this.PauseToolStripMenuItem_Click);
             // 
             // stopToolStripMenuItem
             // 
             this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.stopToolStripMenuItem.Text = "Stop";
             this.stopToolStripMenuItem.Click += new System.EventHandler(this.StopToolStripMenuItem_Click);
             // 
@@ -115,7 +115,7 @@
             // 
             this.fullscreenToolStripMenuItem.CheckOnClick = true;
             this.fullscreenToolStripMenuItem.Name = "fullscreenToolStripMenuItem";
-            this.fullscreenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fullscreenToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.fullscreenToolStripMenuItem.Text = "Fullscreen";
             this.fullscreenToolStripMenuItem.Click += new System.EventHandler(this.FullscreenToolStripMenuItem_Click);
             // 
@@ -165,12 +165,12 @@
             // lstGames
             // 
             this.lstGames.ContextMenuStrip = this.contextMenuStrip1;
-            this.lstGames.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lstGames.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstGames.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.lstGames.FormattingEnabled = true;
-            this.lstGames.Location = new System.Drawing.Point(0, 25);
+            this.lstGames.Location = new System.Drawing.Point(0, 24);
             this.lstGames.Name = "lstGames";
-            this.lstGames.Size = new System.Drawing.Size(291, 368);
+            this.lstGames.Size = new System.Drawing.Size(291, 369);
             this.lstGames.TabIndex = 1;
             this.lstGames.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.LstGames_DrawItem);
             this.lstGames.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.LstGames_MeasureItem);
