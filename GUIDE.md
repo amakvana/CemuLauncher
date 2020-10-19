@@ -15,7 +15,6 @@
 2. Place CemuLauncher.exe alongside Cemu.exe in the root of your Cemu folder
 3. Run CemuLauncher.exe
 4. ```Right-click``` on each game and click on ```Edit Graphics API``` to set per-game API's 
-5. Double-click on a game to run cemu with chosen Per-Game Graphics API
 
 * Per-Game Graphics API settings are stored in CemuLauncherSettings.xml
 
