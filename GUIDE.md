@@ -38,4 +38,5 @@
 
 ## Emulation FrontEnd Usage
 1. Follow the setup guides for both Cemu and CemuLauncher
-2. In your chosen FrontEnd, replace game entries ```cemu.exe -g``` with ```cemulauncher.exe -g```
+2. Ensure ```Fullscreen``` is checked inside the ```Emulation``` tab within CemuLauncher
+3. In your chosen FrontEnd, replace game entries ```cemu.exe -g``` with ```cemulauncher.exe -g```
