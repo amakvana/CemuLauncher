@@ -25,6 +25,7 @@ If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
  - OS: [e.g. Windows 10, Windows 7]
+ - Cemu Version (e.g 1.22.3, 1.22.0)
 
 **Additional context**
 Add any other context about the problem here.
