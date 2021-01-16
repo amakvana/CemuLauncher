@@ -393,7 +393,8 @@ namespace CemuLauncher
                 {
                     onlineVersion = reader.ReadToEnd();
                 }
-                return (Application.ProductVersion == onlineVersion);
+
+                return (Application.ProductVersion.Trim() == onlineVersion.Trim());
             }
             catch
             {
