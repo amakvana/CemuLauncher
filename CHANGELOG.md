@@ -1,7 +1,8 @@
 # Changelog 
 
 ## v1.2.0.0
-* Bug fixes  
+* Fixed: Version detection
+* Fixed: Minor bugs
 
 ## v1.1.0.0
 * New Feature: Command Line Arguments now implemented to improvement compatibility with Emulation Frontends  
