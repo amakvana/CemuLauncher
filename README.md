@@ -1,3 +1,7 @@
+![GitHub repo size](https://img.shields.io/github/repo-size/amakvana/CemuLauncher)
+![GitHub all releases](https://img.shields.io/github/downloads/amakvana/CemuLauncher/total)
+![GitHub](https://img.shields.io/github/license/amakvana/CemuLauncher)
+
 # CemuLauncher
 A custom Game Launcher for Cemu. 
 
